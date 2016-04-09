@@ -1,0 +1,16 @@
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	st = status
+	co = checkout
+	br = branch
+[push]
+	default = current
+[color]
+	status = auto
+[color "status"]
+	added = green
+	changed = yellow
+	untracked = red
+	deleted = red
+[core]
+	editor = vim
