@@ -1,16 +1,28 @@
+[core]
+	editor = vim
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[push]
+	default = tracking
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	st = status
 	co = checkout
 	br = branch
-[push]
-	default = current
+	diffstat = diff --stat=150,150
 [color]
 	status = auto
+	branch = auto
+	diff = auto
+	interactive = auto
 [color "status"]
-	added = green
-	changed = yellow
+	added = green bold
+	changed = yellow bold
+	deleted = red bold
 	untracked = red
-	deleted = red
-[core]
-	editor = vim
+[color "branch"]
+	current = green bold
+	local = green
+	remote = red bold
