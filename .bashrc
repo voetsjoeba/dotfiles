@@ -55,6 +55,13 @@ export TERM="xterm-256color"
 export TERMINFO="$HOME/.terminfo"
 mkdir -p "$TERMINFO"
 
+if [[ ! -f "$TERMINFO/$TERM.noalt" ]]; then
+    if infocmp >"$TERMINFO/$TERM.noalt"; then
+        sed -i -re 's/smcup.*?,//' -e 's/rmcup.*?,//' -e '/^[\t ]*$/d' "$TERMINFO/$TERM.noalt"
+        tic "$TERMINFO/$TERM.noalt" -o "$TERMINFO"
+    fi
+fi
+
 # Interactive shell options
 if [[ -n "$PS1" && "$-" == *i* ]]
 then
