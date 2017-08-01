@@ -14,6 +14,7 @@ set modeline                    " enable mode lines (e.g. '# vim: x=y :' at the 
 set modelines=5                 " look at the first X lines in a file for modelines
 set ffs=unix,dos,mac            " Use Unix as the standard file type
 set textwidth=0 wrapmargin=0    " no automatic physical line wrapping please
+set hlsearch                    " highlight search matches
 
 syntax on                       " enable syntax highlighting
 filetype plugin on              " auto-detect file types,
@@ -71,3 +72,66 @@ autocmd Syntax gitcommit setlocal textwidth=0
 " the range defaults to the current line if not specified (as opposed to e.g. '-range=%', which
 " will default to the entire file)
 command -range Pem64 <line1>,<line2>s/\v(.{64})/\1^M/g
+
+" show tab numbers in the tab line, so that it's easier to see which number to switch to (use 1gt, 2gt, etc. to switch to tab 1, 2, etc)
+" from http://vim.wikia.com/wiki/Show_tab_number_in_your_tab_line
+set tabline=%!MyTabLine()
+function MyTabLine()
+  let s = '' " complete tabline goes here
+  for t in range(tabpagenr('$')) " loop through each tab page
+    " select the highlighting for the buffer names
+    if t + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    let s .= ' '
+    let s .= '%' . (t + 1) . 'T'         " set the tab page number (for mouse clicks)
+    let s .= t + 1 . ' '                 " set page number string
+    " get buffer names and statuses
+    let n = ''                           "temp string for buffer names while we loop and check buftype
+    let m = 0                            " &modified counter
+    let bc = len(tabpagebuflist(t + 1))  "counter to avoid last ' '
+    for b in tabpagebuflist(t + 1)       " loop through each buffer in a tab
+      " buffer types: quickfix gets a [Q], help gets [H]{base fname}
+      " others get 1dir/2dir/3dir/fname shortened to 1/2/3/fname
+      if getbufvar( b, "&buftype" ) == 'help'
+        let n .= '[H]' . fnamemodify( bufname(b), ':t:s/.txt$//' )
+      elseif getbufvar( b, "&buftype" ) == 'quickfix'
+        let n .= '[Q]'
+      else
+        let n .= pathshorten(bufname(b))
+        "let n .= bufname(b)
+      endif
+      " check and ++ tab's &modified count
+      if getbufvar( b, "&modified" )
+        let m += 1
+      endif
+      " no final ' ' added...formatting looks better done later
+      if bc > 1
+        let n .= ' '
+      endif
+      let bc -= 1
+    endfor
+    " add modified label [n+] where n pages in tab are modified
+    if m > 0
+      "let s .= '[' . m . '+]'
+      let s.= '+ '
+    endif
+    " add buffer names
+    if n == ''
+      let s .= '[No Name]'
+    else
+      let s .= n
+    endif
+    " switch to no underlining and add final space to buffer list
+    "let s .= '%#TabLineSel#' . ' '
+    let s .= ' '
+  endfor
+  let s .= '%#TabLineFill#%T'   " after the last tab fill with TabLineFill and reset tab page nr
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+    let s .= '%=%#TabLine#%999XX'
+  endif
+  return s
+endfunction
