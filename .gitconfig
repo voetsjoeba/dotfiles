@@ -9,6 +9,7 @@
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	st = status
+	stt = status -uno # only list tracked files
 	co = checkout
 	br = branch
 	diffstat = diff --stat=150,150
