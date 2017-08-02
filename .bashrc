@@ -58,7 +58,7 @@ mkdir -p "$TERMINFO"
 if [[ ! -f "$TERMINFO/$TERM.noalt" ]]; then
     if infocmp >"$TERMINFO/$TERM.noalt"; then
         sed -i -re 's/smcup.*?,//' -e 's/rmcup.*?,//' -e '/^[\t ]*$/d' "$TERMINFO/$TERM.noalt"
-        tic "$TERMINFO/$TERM.noalt" -o "$TERMINFO"
+        tic -o "$TERMINFO" "$TERMINFO/$TERM.noalt"
     fi
 fi
 
